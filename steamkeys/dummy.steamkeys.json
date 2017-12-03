@@ -1,0 +1,14 @@
+{
+   "bundles":[
+         {
+         "id": "001",
+         "name": "Game Bunde 01",
+         "games":
+            [
+               { "name": "Game Name 1", "key": "game1-key" },
+               { "name": "Game Name 2", "key": "game2-key" },
+               { "name": "Game Name 3", "key": "game3-key" },
+            ]
+         }
+      ]
+}
