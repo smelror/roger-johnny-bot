@@ -1,0 +1,19 @@
+# Contains token and channel ID
+config.json
+
+# Sublime project files
+discord-rogerjohnny.sublime-project
+discord-rogerjohnny.sublime-workspace
+
+# Useless log-file (to git)
+npm-debug.log
+
+# All key handling (private stuff)
+steamkeys/steamkeys.json
+steamkeys/steamkeys_bckup.json
+steamkeys/steamkeys_log.txt
+
+# Stats
+stats/counter.json
+stats/guessingstats.json
+stats/points.json

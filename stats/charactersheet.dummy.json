@@ -1,0 +1,25 @@
+{
+	"121212": // Dummy uid
+	{
+		"level": 1,
+		"race": "Human",
+		"class": "Rogue",
+		"name": null,
+		"title": null,
+		"str": 1,
+		"dex": 1,
+		"int": 1,
+		"hp": 10,
+		"equipment": {
+			"head": null,
+			"body": null,
+			"pants": null,
+			"boots": null,
+			"lefthand": null,
+			"righthand": null
+		}
+
+	}
+
+
+}
