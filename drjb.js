@@ -1,8 +1,7 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-
-// All the commands - wip
-var cmds = [
+const version = "0.5.0";
+const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
 	"kuk - You are one.",
@@ -31,10 +30,10 @@ let game_guess = { isGameOn: false, numberToGuess: 0, pointsToWin: 0 }
 
 // READY SET 
 client.on('ready', () => {
-   console.log('Version: 0.4.6 - Connected');
+   console.log('Version: '+version+' - Connected');
    //console.log('message.channel: '+message.channel);   
    const channel = client.channels.get(cfg.channelid);
-   //channel.send('*Roger-Johnny reporting for duty!*');
+   channel.send('Beep-boop. Running on '+version+'.');
 });
 
 
@@ -42,7 +41,7 @@ client.on('ready', () => {
 client.on("guildMemberAdd", member => {
 	console.log("New visitor!");
 	const channel = client.channels.get(cfg.channelid);
-	channel.send(`${member} is here. Cool.`);
+	channel.send(`** ${member} ** is here. Cool.`);
 });
 
 
@@ -51,6 +50,7 @@ client.on('message', message => {
 	if (!message.content.startsWith('!')) return; // No prefix
 
 	const channel = client.channels.get(cfg.channelid);
+	const msgsent = message.content.toLowerCase();
 
 	// Initialize points if no present
 	if (!points[message.author.id]) points[message.author.id] = {
@@ -63,8 +63,8 @@ client.on('message', message => {
   	let gstats = game_guessStats[message.author.id];
 
   	// Commands
-	if (message.content.toLowerCase() === '!help') {
-		let msg = "**Commands:**```css";
+	if (msgsent === '!help') {
+		let msg = "**Commands:**```";
 		for (var i = 0; i < cmds.length; i++) {
 			msg += cmds[i];
 			msg += '\n';
@@ -73,39 +73,45 @@ client.on('message', message => {
 		msg += "\nPrefix command with **` ! `** if you want me to read it.";
 		channel.send(msg);
 	}
-	else if (message.content.toLowerCase() === '!ping') {
+	else if (msgsent === '!ping') {
 		channel.send('**Pong!** (Ponged counter: '+counter.pong+')');
 		counter.pong++;
 	}
-	else if (message.content.toLowerCase() === '!kuk') {
+	else if (msgsent === '!kuk') {
 		// message.reply(':regional_indicator_k::regional_indicator_u::regional_indicator_k:.');
 		if(counter.kukauthor !== message.author.username) {
-			message.reply(" kuk.", {tts:true});
+			message.reply(" kuk.");
 			counter.kuk++;
 			counter.kukauthor = message.author.username;
 			message.delete(100);
 		}
 	}
-	else if (message.content.toLowerCase() === '!level') {
+	else if (msgsent === '!level') {
 		message.reply('your level is '+points[message.author.id].level);
 	}
-	else if (message.content.toLowerCase() === '!points') {
+	else if (msgsent === '!points') {
 		message.reply('you have **'+points[message.author.id].points+'** points.');
 	}
-	else if (message.content.toLowerCase() === '!stats') {
+	else if (msgsent === '!stats') {
 		channel.send(message.author.username+' has '+gstats.won+' wins with '+gstats.guesses+' guesses ('+(gstats.guesses/gstats.won)+' guess/win)');
 	}
-	else if (message.content.toLowerCase() === '!magic') {
+	else if (msgsent === '!magic') {
 		let msg = "https://media.giphy.com/media/5ftsmLIqktHQA/giphy.gif";
 		msg += "\n Ah ah ah! You didn't say the magic word.";
 		channel.send(msg);
 	}
-	else if (message.content.toLowerCase() === '!disco') {
-		channel.send(':beers: :tropical_drink: **P A R T Y** :man_dancing: :cartwheel: ');
+	else if (msgsent === '!disco') {
+		const discos = [
+			':beers: :tropical_drink: **P A R T Y** :man_dancing: :cartwheel: ',
+			':palm_tree: :cocktail: **P A R T Y** :slot_machine: :lifter: ',
+			':handball: :dancer:  **P A R T Y** :beer: :100: '
+		];
+		let n = Math.floor(Math.random() * (discos.length - 1)) + 1;
+		channel.send( discos[n] );
 		message.delete(250).then(msg => console.log(`Deleted message from ${msg.author.username}: ${msg.content}`)).catch(console.error);
 	}
 
-	else if (message.content.toLowerCase().startsWith('!nrk')) {
+	else if (msgsent.startsWith('!nrk')) {
 		var url = "https://www.nrk.no/nyheter/siste.rss";
 		const args = message.content.split(/\s+/g);
 		if(args.length > 1) {
@@ -127,19 +133,20 @@ client.on('message', message => {
 					break;
 			}
 		}
+		let headline = (args.length > 1 ? args[1]+" " : " "); // If headline, display headline
  		parser.parseURL(url, function(err, parsed) {
  			var news = "";
 			for(var c = 0; c < 3; c++) {
 				news += '\u2022 ' + parsed.feed.entries[c].title + ' (<' + parsed.feed.entries[c].link + '>) \n'; //channel.send( parsed.feed.entries[c].title + ' (<' + parsed.feed.entries[c].link + '>) \n');
 			}
-			channel.send( '\u21B4 \n'+news );
+			channel.send( 'NRK '+headline+'\u21B4 \n'+news );
 		});
- 		message.delete(5000);
+ 		message.delete(250);
 	}
 
 	// Humble Bundle steam keys
 	// Args: 0-1
-	else if (message.content.startsWith('!humble')) {
+	else if (msgsent.startsWith('!humble')) {
 		const args = message.content.split(/\s+/g);
 		let msg = "";
 
@@ -190,15 +197,14 @@ client.on('message', message => {
 
 	// Gmaps
 	// https://www.google.com/maps/place/<args>
-	else if (message.content.startsWith('!maps')) {
+	else if (msgsent.startsWith('!maps')) {
 		const args = message.content.split(/\s+/g);
 		if(args.length < 2) return;
-
 		channel.send('https://www.google.com/maps/place/'+args[1]);
 	}
 
 	// Humble Bundle claim game
-	else if (message.content.startsWith('!claim')) {
+	else if (msgsent.startsWith('!claim')) {
 		const args = message.content.split(/\s+/g);
 		if(args.length < 2) return;
 
@@ -228,7 +234,7 @@ client.on('message', message => {
 
 	// Random number game!
 	// Args: 1 (max number)
-	else if (message.content.startsWith('!rg') && !game_guess.isGameOn) {
+	else if (msgsent.startsWith('!rg') && !game_guess.isGameOn) {
 		const args = message.content.split(/\s+/g);
 		let maxn = parseInt(args[1]);
 		if(!Number.isInteger(maxn)) return;
@@ -238,14 +244,14 @@ client.on('message', message => {
 		// Ready!
 		game_guess.pointsToWin = Math.floor(Math.random() * (10 - 1)) + 1;
 		channel.send('Guess the correct number, win '+game_guess.pointsToWin+' points. It is a number from 1 to '+maxn);
-		channel.send('Use `!n` followed by the number to make a guess (example: `!n 4`)');
+		channel.send('Type `!n` followed by the number to make a guess (example: `!n 4`)');
 		
 		// Generate the number
 		game_guess.numberToGuess = Math.floor(Math.random() * (maxn - 1)) + 1;
 		game_guess.isGameOn = true;
 		client.user.setGame('Guessing Game');
 	}
-	else if (message.content.toLowerCase().startsWith('!n') && game_guess.isGameOn) {
+	else if (msgsent.startsWith('!n') && game_guess.isGameOn) {
 		const args = message.content.split(/\s+/g);
 		if(!Number.isInteger(parseInt(args[1]))) {
 			message.reply('that is not a number.');
@@ -263,7 +269,7 @@ client.on('message', message => {
 			game_guess.pointsToWin = 0;
 			client.user.setGame('');
 		} else {
-			channel.send('Incorrect.');
+			message.edit( message.content+' :wrong:' );
 		}
 	}
 
