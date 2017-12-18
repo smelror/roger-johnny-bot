@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.0";
+const version = "0.5.1";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -269,7 +269,8 @@ client.on('message', message => {
 			game_guess.pointsToWin = 0;
 			client.user.setGame('');
 		} else {
-			message.edit( message.content+' :wrong:' );
+			const wrongmsg = message.toString()+" :wrong:";
+			message.edit( wrongmsg );
 		}
 	}
 

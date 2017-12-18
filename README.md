@@ -10,6 +10,9 @@ A small bot for Discord, using DiscordJS running on Node.
 
 ## Changelog
 
+### 0.5.1
+* Fixed "wrong number guessed" message edits (should work now)
+
 ### 0.5.0
 * !disco - added RNGeesus to it
 * !kuk - fjernet text-to-speech
