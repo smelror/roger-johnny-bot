@@ -175,7 +175,7 @@ client.on('message', message => {
 					msg += "**"+hb.bundles[x].id+" - "+hb.bundles[x].name+"**\n```"
 					msg += " id  - Game \n";
 					for(let y = 0; y < hb.bundles[x].games.length; y++) {
-						if(hb.bundles[x].games[y].key != null) {
+						if(hb.bundles[x].games[y].key !== null) {
 							msg += hb.bundles[x].games[y].key.substring(0, 4) + " - ";
 							msg += hb.bundles[x].games[y].name;
 							msg += "\n";
@@ -212,7 +212,7 @@ client.on('message', message => {
 		// Search for game (needle-haystack)
 		for(let x = 0; x < hb.bundles.length; x++) {
 			for(let y = 0; y < hb.bundles[x].games.length; y++) {
-				if(hb.bundles[x].games[y].key != null && hb.bundles[x].games[y].key.substring(0,4) === args[1]) {
+				if(hb.bundles[x].games[y].key !== null && hb.bundles[x].games[y].key.substring(0,4) === args[1]) {
 					// Key found
 					dm += "\nThis is an automated message.\n\n";
 					dm += "Game: "+hb.bundles[x].games[y].name+"\n";
@@ -220,7 +220,8 @@ client.on('message', message => {
 					message.author.send(dm); // Send message
 					let logmsg = hb.bundles[x].games[y].name+" has been claimed by "+message.author.username+".";
 					channel.send(logmsg);
-					delete hb.bundles[x].games[y]; // Delete key from memory
+					// delete hb.bundles[x].games[y]; // Delete key from memory
+					hb.bundles[x].games[y].key = null; // Set it to null so it won't show up.
   					fs.writeFile("steamkeys/steamkeys.json", JSON.stringify(hb), (err) => { if (err) console.error(err) }); // Save steamkeys.json
   					fs.appendFile("steamkeys/steamkeys_log.txt", logmsg, function (err) {
   						if (err) throw err;
@@ -230,7 +231,6 @@ client.on('message', message => {
 			}
 		}
 	}
-
 
 	// Random number game!
 	// Args: 1 (max number)
