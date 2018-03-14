@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.1";
+const version = "0.5.4";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -51,6 +51,7 @@ client.on('message', message => {
 
 	const channel = client.channels.get(cfg.channelid);
 	const msgsent = message.content.toLowerCase();
+	let pointsReward = 0; // Used for rewarding points by different usage.
 
 	// Initialize points if no present
 	if (!points[message.author.id]) points[message.author.id] = {
@@ -76,13 +77,14 @@ client.on('message', message => {
 	else if (msgsent === '!ping') {
 		channel.send('**Pong!** (Ponged counter: '+counter.pong+')');
 		counter.pong++;
+		pointsReward = 1;
 	}
 	else if (msgsent === '!kuk') {
-		// message.reply(':regional_indicator_k::regional_indicator_u::regional_indicator_k:.');
 		if(counter.kukauthor !== message.author.username) {
 			message.reply(" kuk.");
 			counter.kuk++;
 			counter.kukauthor = message.author.username;
+			pointsReward = -1;
 			message.delete(100);
 		}
 	}
@@ -109,6 +111,7 @@ client.on('message', message => {
 		let n = Math.floor(Math.random() * (discos.length - 1)) + 1;
 		channel.send( discos[n] );
 		message.delete(250).then(msg => console.log(`Deleted message from ${msg.author.username}: ${msg.content}`)).catch(console.error);
+		pointsReward = 2;
 	}
 
 	else if (msgsent.startsWith('!nrk')) {
@@ -142,6 +145,7 @@ client.on('message', message => {
 			channel.send( 'NRK '+headline+'\u21B4 \n'+news );
 		});
  		message.delete(250);
+ 		pointsReward = 1;
 	}
 
 	// Humble Bundle steam keys
@@ -158,7 +162,6 @@ client.on('message', message => {
 			for(let x = 0; x < hb.bundles.length; x++) {
 				msg += hb.bundles[x].id + " - "
 				msg += hb.bundles[x].name;
-				msg += " (" + hb.bundles[x].games.length + ")";
 				msg += "\n";
 			}
 			msg += "```";
@@ -201,6 +204,7 @@ client.on('message', message => {
 		const args = message.content.split(/\s+/g);
 		if(args.length < 2) return;
 		channel.send('https://www.google.com/maps/place/'+args[1]);
+		pointsReward = 1;
 	}
 
 	// Humble Bundle claim game
@@ -219,6 +223,7 @@ client.on('message', message => {
 					dm += "Steam-key: `"+hb.bundles[x].games[y].key+"`\n\n";
 					message.author.send(dm); // Send message
 					let logmsg = hb.bundles[x].games[y].name+" has been claimed by "+message.author.username+".";
+					pointsReward = 3;
 					channel.send(logmsg);
 					// delete hb.bundles[x].games[y]; // Delete key from memory
 					hb.bundles[x].games[y].key = null; // Set it to null so it won't show up.
@@ -271,15 +276,17 @@ client.on('message', message => {
 		} else {
 			const wrongmsg = message.toString()+" :wrong:";
 			message.edit( wrongmsg );
+			pointsReward = 1; // 1 point reward for participating
 		}
 	}
-
-	saveFiles(); // Last call!
+	// Assign any points (if any)
+	points[message.author.id].points += pointsReward;
+	// Save all files for continuity
+	saveFiles();
 });
 
 // Finally, engage!
 client.login(cfg.token);
-
 
 function saveFiles() {
   	// Save points.json
