@@ -19,6 +19,7 @@ const parser = require('rss-parser'); // RSS parser
 const fs = require("fs"); // FileSystem
 const Discord = require('discord.js'); // Discordjs
 const client = new Discord.Client();
+const loginmessage = "Beep-boop. Running on "+version+" :check: ";
 
 let points = JSON.parse(fs.readFileSync("stats/points.json", "utf8"));
 let counter = JSON.parse(fs.readFileSync("stats/counter.json", "utf8"));
@@ -33,7 +34,7 @@ client.on('ready', () => {
    console.log('Version: '+version+' - Connected');
    //console.log('message.channel: '+message.channel);   
    const channel = client.channels.get(cfg.channelid);
-   channel.send('Beep-boop. Running on '+version+' :check: ');
+   channel.send(loginmessage);
 });
 
 // Welcome message!
