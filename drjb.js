@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.5";
+const version = "0.5.6";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -162,7 +162,7 @@ client.on('message', message => {
 			for(let x = 0; x < hb.bundles.length; x++) {
 				msg += hb.bundles[x].id + " - "
 				msg += hb.bundles[x].name;
-				msg += "("+ hb.bundles[x].games.length +")";
+				msg += " ("+ hb.bundles[x].games.length +")";
 				msg += "\n";
 			}
 			msg += "```";
@@ -194,7 +194,6 @@ client.on('message', message => {
 			}
 
 		}
-
 		// Finally, send message
 		channel.send(msg);
 	}
