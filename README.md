@@ -27,10 +27,10 @@ Some commands yields (positive or negative) points when used. This will be used 
 
 ### 0.5.7
 * Minor fixes done to main code
-* D100-roll silently announced by bot adding a small orange diamond-icon at the end of message that got a point.
+* D100-roll silently announced by bot adding a small orange diamond-icon ~~at the end of message that got a point~~ as a new message from the bot.
 
 ### 0.5.6
-* Introduced D100-roll for 1 point. Roll triggers on all non-command message written. A perfect 100-roll will not be announced, but 1 point will be given.
+* Introduced D100-roll for 1 point. Roll triggers on all non-command message written. A perfect 100-roll will ~~not~~ be announced, but 1 point will be given.
 
 ### 0.5.5
 * Introduced Points Rewards for different actions. Testing phase initiated. [See Rewards-table](#rewards) for information about points.
