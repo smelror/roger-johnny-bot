@@ -11,7 +11,7 @@ A small bot for Discord, using DiscordJS running on Node.
 
 ## Rewards
 
-Some commands yields (positive/negative) points when used. 
+Some commands yields (positive or negative) points when used. This will be used in combination with `!level` on a later stage.
 
 | Command		| Points |
 | ------------- | -----: |
@@ -23,12 +23,14 @@ Some commands yields (positive/negative) points when used.
 | `!claim`		| 3		 |
 | `!ng X` 		| 1		 |
 
-
 ## Changelog
+
+### 0.5.6
+* Introduced D100-roll for 1 point. Roll triggers on all non-command message written. A perfect 100-roll will not be announced, but 1 point will be given.
 
 ### 0.5.5
 * Introduced Points Rewards for different actions. Testing phase initiated. [See Rewards-table](#rewards) for information about points.
-* Fixed properly removal of game-key in array of games from a bundle. This should only occurr on successfull `!claim XXXX` usage.
+* Fixed properly removal of game-key in array of games from a bundle. This should only occur on successfull `!claim XXXX` usage.
 
 ### 0.5.1
 * Fixed "wrong number guessed" message edits (should work now)

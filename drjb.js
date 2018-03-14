@@ -47,8 +47,12 @@ client.on("guildMemberAdd", member => {
 
 // CMD INTERACTION
 client.on('message', message => {
-	if (!message.content.startsWith('!')) return; // No prefix
-
+	// No command prefix, but random roll for points given.
+	if (!message.content.startsWith('!')) {
+		// RNG for ekstra point (1:100 chance)
+		if( (Math.floor(Math.random() * (100 - 1)) + 1) === 100) { points[message.author.id].points++; }
+		return; // We're done here.
+	}
 	const channel = client.channels.get(cfg.channelid);
 	const msgsent = message.content.toLowerCase();
 	let pointsReward = 0; // Used for rewarding points by different usage.
@@ -279,7 +283,7 @@ client.on('message', message => {
 			message.edit( wrongmsg );
 			pointsReward = 1; // 1 point reward for participating
 		}
-	}
+	}	
 	// Assign any points (if any)
 	points[message.author.id].points += pointsReward;
 	// Save all files for continuity

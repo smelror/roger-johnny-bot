@@ -13,6 +13,7 @@ autorun.txt
 steamkeys/steamkeys.json
 steamkeys/steamkeys_bckup.json
 steamkeys/steamkeys_log.txt
+steamkeys/blank_bundle.json
 
 # Stats
 stats/counter.json
