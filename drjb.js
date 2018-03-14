@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.4";
+const version = "0.5.5";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -162,6 +162,7 @@ client.on('message', message => {
 			for(let x = 0; x < hb.bundles.length; x++) {
 				msg += hb.bundles[x].id + " - "
 				msg += hb.bundles[x].name;
+				msg += "("+ hb.bundles[x].games.length +")";
 				msg += "\n";
 			}
 			msg += "```";
@@ -225,13 +226,14 @@ client.on('message', message => {
 					let logmsg = hb.bundles[x].games[y].name+" has been claimed by "+message.author.username+".";
 					pointsReward = 3;
 					channel.send(logmsg);
-					// delete hb.bundles[x].games[y]; // Delete key from memory
-					hb.bundles[x].games[y].key = null; // Set it to null so it won't show up.
+					// Remove by Array.splice(index, # of items to remove);
+					let removedGame = hb.bundles[x].games.splice(y,1);
   					fs.writeFile("steamkeys/steamkeys.json", JSON.stringify(hb), (err) => { if (err) console.error(err) }); // Save steamkeys.json
   					fs.appendFile("steamkeys/steamkeys_log.txt", logmsg, function (err) {
   						if (err) throw err;
   						console.log('Steam key logged');
 					});
+					removedGame = null;
 				}
 			}
 		}
