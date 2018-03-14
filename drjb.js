@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.6";
+const version = "0.5.7";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -33,9 +33,8 @@ client.on('ready', () => {
    console.log('Version: '+version+' - Connected');
    //console.log('message.channel: '+message.channel);   
    const channel = client.channels.get(cfg.channelid);
-   channel.send('Beep-boop. Running on '+version+'.');
+   channel.send('Beep-boop. Running on '+version+' :check: ');
 });
-
 
 // Welcome message!
 client.on("guildMemberAdd", member => {
@@ -44,13 +43,19 @@ client.on("guildMemberAdd", member => {
 	channel.send(`** ${member} ** is here. Cool.`);
 });
 
-
 // CMD INTERACTION
 client.on('message', message => {
 	// No command prefix, but random roll for points given.
 	if (!message.content.startsWith('!')) {
 		// RNG for ekstra point (1:100 chance)
-		if( (Math.floor(Math.random() * (100 - 1)) + 1) === 100) { points[message.author.id].points++; }
+		if( (Math.floor(Math.random() * (100 - 1)) + 1) === 100) {
+			points[message.author.id].points++;
+			let m = message.content;
+			m += " :small_orange_diamond: ";
+			message.edit(m)
+			.then(msg => console.log(msg.author.username + " was awarded point."))
+			.catch(console.error);
+		}
 		return; // We're done here.
 	}
 	const channel = client.channels.get(cfg.channelid);
