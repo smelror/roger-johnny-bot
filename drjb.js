@@ -19,7 +19,7 @@ const parser = require('rss-parser'); // RSS parser
 const fs = require("fs"); // FileSystem
 const Discord = require('discord.js'); // Discordjs
 const client = new Discord.Client();
-const loginmessage = "Beep-boop. Running on "+version+" :check: ";
+const loginmessage = "Beep-boop. Running on "+version;
 
 let points = JSON.parse(fs.readFileSync("stats/points.json", "utf8"));
 let counter = JSON.parse(fs.readFileSync("stats/counter.json", "utf8"));
@@ -32,9 +32,10 @@ let game_guess = { isGameOn: false, numberToGuess: 0, pointsToWin: 0 }
 // READY SET 
 client.on('ready', () => {
    console.log('Version: '+version+' - Connected');
-   //console.log('message.channel: '+message.channel);   
    const channel = client.channels.get(cfg.channelid);
-   channel.send(loginmessage);
+   const e_checkmark = client.emojis.get("391992158317445123");
+   channel.send(loginmessage + `${e_checkmark}`);
+
 });
 
 // Welcome message!
@@ -46,22 +47,22 @@ client.on("guildMemberAdd", member => {
 
 // CMD INTERACTION
 client.on('message', message => {
-	// No command prefix, but random roll for points given.
-	if (!message.content.startsWith('!')) {
-		// RNG for ekstra point (1:100 chance)
-		if( (Math.floor(Math.random() * (100 - 1)) + 1) === 100) {
-			points[message.author.id].points++;
-			let m = message.content;
-			m += " :small_orange_diamond: ";
-			message.edit(m)
-			.then(msg => console.log(msg.author.username + " was awarded point."))
-			.catch(console.error);
-		}
-		return; // We're done here.
-	}
+	if(message.author.bot) return;
+
 	const channel = client.channels.get(cfg.channelid);
 	const msgsent = message.content.toLowerCase();
 	let pointsReward = 0; // Used for rewarding points by different usage.
+
+	// No command prefix, but random roll for points given.
+	if (!message.content.startsWith('!') && !message.author.bot) {
+		// RNG for ekstra point (1:100 chance)
+		const roll = Math.floor(Math.random() * (100 - 1)) + 1; // 100 - 1
+		if( roll === 100 ) {
+			points[message.author.id].points++;
+			channel.send(":small_orange_diamond:");
+		}
+		return; // We're done here.
+	}
 
 	// Initialize points if no present
 	if (!points[message.author.id]) points[message.author.id] = {
@@ -285,8 +286,8 @@ client.on('message', message => {
 			game_guess.pointsToWin = 0;
 			client.user.setGame('');
 		} else {
-			const wrongmsg = message.toString()+" :wrong:";
-			message.edit( wrongmsg );
+			const e_wrong = client.emojis.get("391992491596840960");
+			channel.send( `${e_wrong}` );
 			pointsReward = 1; // 1 point reward for participating
 		}
 	}	
