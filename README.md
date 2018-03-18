@@ -24,6 +24,10 @@ Some commands yields (positive or negative) points when used. This will be used 
 | `!ng X` 		| 1		 |
 
 ## Changelog
+### 0.5.8
+* D100-roll
+	* Adds a reaction (orange diamond-icon: 🔸) to the message that won the roll.
+	* Buff: A roll of 95 or above triggers the reaction.
 
 ### 0.5.7
 * Minor fixes done to main code

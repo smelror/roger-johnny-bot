@@ -1,6 +1,6 @@
 // Discord: Roger-Johnny-Bot
 // @author: Vegard Smelror Åmdal
-const version = "0.5.7";
+const version = "0.5.8";
 const cmds = [
 	"help - Lists all commands.",
 	"ping - You ping, I pong.",
@@ -20,6 +20,8 @@ const fs = require("fs"); // FileSystem
 const Discord = require('discord.js'); // Discordjs
 const client = new Discord.Client();
 const loginmessage = "Beep-boop. Running on "+version;
+const rngPointDieMax = 100;
+const rngPointThreshold = 95;
 
 let points = JSON.parse(fs.readFileSync("stats/points.json", "utf8"));
 let counter = JSON.parse(fs.readFileSync("stats/counter.json", "utf8"));
@@ -34,8 +36,7 @@ client.on('ready', () => {
    console.log('Version: '+version+' - Connected');
    const channel = client.channels.get(cfg.channelid);
    const e_checkmark = client.emojis.get("391992158317445123");
-   channel.send(loginmessage + `${e_checkmark}`);
-
+   channel.send(loginmessage + `${e_checkmark}` + "Patch notes: <https://github.com/smelror/roger-johnny-bot#changelog>");
 });
 
 // Welcome message!
@@ -54,21 +55,19 @@ client.on('message', message => {
 	let pointsReward = 0; // Used for rewarding points by different usage.
 
 	// No command prefix, but random roll for points given.
-	if (!message.content.startsWith('!') && !message.author.bot) {
+	if (!message.content.startsWith('!')) {
 		// RNG for ekstra point (1:100 chance)
-		const roll = Math.floor(Math.random() * (100 - 1)) + 1; // 100 - 1
-		if( roll === 100 ) {
+		const roll = Math.floor(Math.random() * (rngPointDieMax - 1)) + 1; // 100 - 1
+		if( roll >= rngPointThreshold ) {
 			points[message.author.id].points++;
-			channel.send(":small_orange_diamond:");
+			message.react("🔸")
+			.catch(console.error);
 		}
 		return; // We're done here.
 	}
 
 	// Initialize points if no present
-	if (!points[message.author.id]) points[message.author.id] = {
-    		points: 0,
-    		level: 1
-  		};
+	if (!points[message.author.id]) points[message.author.id] = { points: 0, level: 1 };
 
   	// Initialize Guessing Game Stats for players
   	if (!game_guessStats[message.author.id]) game_guessStats[message.author.id] = { won: 0, guesses: 0 };
